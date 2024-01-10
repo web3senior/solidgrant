@@ -21,8 +21,8 @@ export default function Pool({ title }) {
   const [loaderData, setLoaderData] = useState(useLoaderData())
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState([])
-  const [pool, setPool] = useState([])
+  const [data, setData] = useState()
+  const [pool, setPool] = useState()
   const [strategyAddr, setStrategyAddr] = useState('0x030B9c43e18d3054717E4b0D195893Ca7A9A32F4')
   const auth = useAuth()
   let errors = useActionData()
@@ -213,6 +213,7 @@ export default function Pool({ title }) {
   const getTransactionInfo = async (txn) => web3.eth.getTransaction(txn)
 
   useEffect(() => {
+    const t = toast.loading(`Fetching pools`)
     getPool().then((res) => {
       let decodedPools = []
       res.result.map(async (item, i) => {
@@ -222,10 +223,11 @@ export default function Pool({ title }) {
         decodedData['poolId'] = web3.utils.hexToNumber(item.topics[1])
         decodedData['createdAt'] = new Date(Number(item.timeStamp) * 1000)
 
-        console.l
-
-        if (transactionData.from.trim().toLowerCase() === auth.wallet.trim().toLowerCase()) decodedPools.push(decodedData)
-        if (++i === res.result.length) setPool(decodedPools)
+        if (transactionData.from.trim().toLowerCase().toString() === auth.wallet.trim().toLowerCase().toString()) decodedPools.push(decodedData)
+        if (++i === res.result.length) {
+          setPool(decodedPools)
+          toast.dismiss(t)
+        }
       })
     })
   }, [])

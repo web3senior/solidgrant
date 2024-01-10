@@ -1,3 +1,5 @@
+import { useAuth, web3, registry, allo, strategy } from '../contexts/AuthContext'
+
 export const getProfile = async (address, topic0) => {
   let parameters = new URLSearchParams({
     module: 'logs',
@@ -23,14 +25,13 @@ export const getProfile = async (address, topic0) => {
   }
 }
 
-
 export const getPool = async (address, topic0) => {
   let parameters = new URLSearchParams({
     module: 'logs',
     action: 'getLogs',
     fromBlock: 0,
     toBlock: 'latest',
-    address: address || '0x1133ea7af70876e64665ecd07c0a0476d09465a1',
+    address: address || allo.address(),
     topic0: topic0 || '0x69bcb5a6cf6a3c95185cbb451e77787240c866dd2e8332597e3013ff18a1aba1',
     apikey: import.meta.env.VITE_BLOCKSCAN_API_KEY,
   })
@@ -55,8 +56,35 @@ export const getFund = async (address, topic0) => {
     action: 'getLogs',
     fromBlock: 0,
     toBlock: 'latest',
-    address: address || '0x1133ea7af70876e64665ecd07c0a0476d09465a1',
+    address: address || allo.address(),
     topic0: topic0 || '0xbf59838198f4ea92f663f5c1fc697f151a1b746b7dff86d564f250a55cbb4851',
+    apikey: import.meta.env.VITE_BLOCKSCAN_API_KEY,
+  })
+
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  }
+
+  try {
+    const response = await fetch(`https://api-goerli.etherscan.io/api?${parameters.toString()}`, requestOptions)
+    if (!response.ok) throw new Response('Failed to get data', { status: 500 })
+    return response.json()
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export const getRecipient = async (address, topic0) => {
+  if (address === undefined) throw new Error(`Strategy address is required`)
+
+  let parameters = new URLSearchParams({
+    module: 'logs',
+    action: 'getLogs',
+    fromBlock: 0,
+    toBlock: 'latest',
+    address: address, // Strategy Address
+    topic0: topic0 || '0xa197306e3dd5494a61a695381aa809a53b8e377a685e84e404a85d5a8da6cc62',
     apikey: import.meta.env.VITE_BLOCKSCAN_API_KEY,
   })
 

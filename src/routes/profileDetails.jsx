@@ -77,7 +77,8 @@ export default function Profile({ title }) {
 
   const getRegistryProfile = async (profileId) => {
     const t = toast.loading(`Reading profile`)
-    await registry.getProfileById(profileId).then(data =>{
+    await registry.getProfileById(profileId).then((data) => {
+      console.log(data)
       setProfile(data)
       toast.dismiss(t)
     })
@@ -266,6 +267,10 @@ export default function Profile({ title }) {
                 <li>
                   <label htmlFor="">Id: </label>
                   <span>{profile.id}</span>
+                </li>
+                <li>
+                  <label htmlFor="">Anchor: </label>
+                  <span>{profile.anchor}</span>
                 </li>
                 <li>
                   <label htmlFor="">Name: </label>

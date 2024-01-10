@@ -242,8 +242,7 @@
   }
 }
 .active {
-  background: rgba(0, 0, 0, 0.24);
-
+  box-shadow: 0px 0px 50.062px 0px rgba(0 0 0 / 24%) inset;
   &:before {
     display: none;
   }
@@ -280,9 +279,9 @@
   // position: sticky;
   // top: 0;
   // z-index: 999;
-button {
-  box-shadow: none;
-}
+  button {
+    box-shadow: none;
+  }
   &__logo {
     column-gap: 1rem;
   }
