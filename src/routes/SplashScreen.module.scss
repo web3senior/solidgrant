@@ -1,0 +1,25 @@
+.section {
+  position: relative;
+  display: flex;
+  place-content: center;
+  place-items: center;
+  min-height: 100dvh;
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  z-index: 999;
+
+  &:before {
+    content: 'MintDID';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 2rem;
+    font-weight: bold;
+  }
+
+  figure {
+    img {
+      width: 120px;
+    }
+  }
+}

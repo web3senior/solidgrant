@@ -1,0 +1,47 @@
+.form {
+
+  select,
+  textarea,
+  input[type='text'],
+  input[type='search'],
+  input[type='date'],
+  input[type='password'],
+  input[type='email'],
+  input[type='number'],
+  input[type='datetime-local'] {
+    all: unset;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 6px 16px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #333;
+    background-clip: padding-box;
+    border-radius: 8px;
+    border:1px solid #33333365;
+    outline: none;
+    background-color: #fff;
+    transition: background-color 200ms ease, outline 200ms ease, color 200ms ease, box-shadow 200ms ease, -webkit-box-shadow 200ms ease;
+
+    &:disabled,
+    &[readonly] {
+      background-color: rgba(94, 94, 94, 0.466);
+      opacity: 1;
+    }
+
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      -webkit-box-shadow: 0 0 0 4px var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(13, 153, 255, 0.1);
+    }
+
+    &:focus,
+    &:active {
+      background-color: #fff;
+     box-shadow: 0 0 0 4px var(--primary-color);
+    }
+  }
+}

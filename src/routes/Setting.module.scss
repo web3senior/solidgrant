@@ -1,0 +1,27 @@
+.section {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+
+  ul {
+    row-gap: 1.5rem;
+
+    li {
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      figure {
+        background-color: #f1f1f1;
+        border-radius: 999px;
+        padding: 1rem;
+        margin-left: 1rem;
+      }
+
+      img {
+        margin-right: auto;
+      }
+    }
+  }
+}

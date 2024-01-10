@@ -1,0 +1,13 @@
+.section {
+  overflow-y: scroll;
+
+  a {
+ &:hover {
+  box-shadow: 0 3.2px 7.2px #837eff1f, 0 0.6px 1.8px #837eff1a;
+ }
+  }
+
+  ul {
+ 
+  }
+}

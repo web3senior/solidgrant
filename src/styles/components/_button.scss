@@ -1,0 +1,16 @@
+@use '../abstract/variables' as *;
+
+.btn {
+    display: inline-block;
+    background: var(--primary-color);
+    border-radius: 0.2em;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+    color: #fff;
+    min-width: 100px;
+    padding:.1rem .2rem;
+    text-align: center;
+    vertical-align: middle;
+    transition: all 0.2s;
+    cursor: pointer;
+
+}

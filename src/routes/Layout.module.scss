@@ -1,0 +1,356 @@
+@import './../styles/components/responsive';
+.rootLayout {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 2rem);
+  max-width: 100%;
+  column-gap: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  flex-flow: row no-wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  align-content: stretch;
+  background-color: #eff6fc;
+
+  nav {
+    order: 1;
+    width: 125px;
+    height: calc(100vh - 1rem);
+    position: sticky;
+    top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(225deg, #fff44f 2.83%, #ff980e 19.53%, #ff3647 48.38%, #e31587 90%);
+    *background: #2db177;
+    color: var(--white);
+    padding: 0 0.5rem 1rem 0.5rem;
+    border-radius: 999px;
+    box-shadow: -4px 4px 21px rgba(0, 0, 0, 0.25);
+
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: url('./../assets/images/pattern.svg');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+    }
+
+    figure {
+      $r: 110px;
+      width: $r;
+      height: $r;
+      background-color: var(--white);
+      border-radius: 999px;
+      position: relative;
+      overflow: hidden;
+      transition: all 200ms cubic-bezier(0.345, 0.115, 0.135, 1.42);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 90%;
+        height: 90%;
+      }
+      &:hover {
+        transform: scale(1.08);
+      }
+
+      &:after {
+        content: '';
+        top: 0;
+        transform: translate(100%, 100%) rotate(45deg);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+        animation: slide 2.5s infinite 0.5s;
+        /* 
+              CSS Gradient - complete browser support from http://www.colorzilla.com/gradient-editor/ 
+              */
+        background: -moz-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+        /* FF3.6+ */
+        background: -webkit-gradient(
+          linear,
+          left top,
+          right top,
+          color-stop(0%, rgba(255, 255, 255, 0)),
+          color-stop(50%, rgba(255, 255, 255, 0.8)),
+          color-stop(99%, rgba(128, 186, 232, 0)),
+          color-stop(100%, rgba(125, 185, 232, 0))
+        );
+        /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+        /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+        /* Opera 11.10+ */
+        background: -ms-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+        /* IE10+ */
+        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+        /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#007db9e8', GradientType=1);
+        /* IE6-9 */
+      }
+
+      /* animation */
+      @keyframes slide {
+        0% {
+          transform: translate(-100%, -100%) rotate(45deg);
+        }
+
+        100% {
+          transform: translate(100%, 100%) rotate(45deg);
+        }
+      }
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.5rem;
+      max-height: 100%;
+      padding: 1rem 0 1rem 0.1rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      --thumbBG: rgba(2, 2, 2, 0.4);
+      --scrollbarBG: rgba(2, 2, 2, 0.1);
+
+      li {
+        margin-right: 0.1rem;
+        a {
+          &:before {
+            content: '';
+            background-color: rgba(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(0.5) scaleY(0.5) perspective(1px);
+            transition: transform 200ms cubic-bezier(0.345, 0.115, 0.135, 1.42), opacity 150ms ease-out, background-color 150ms ease-out;
+            z-index: -1;
+            border-radius: inherit;
+          }
+        }
+      }
+    }
+
+    a {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      row-gap: 0.5rem;
+      border-radius: 8px;
+      padding: 0.5rem 0.5rem;
+      color: var(--white);
+      isolation: isolate;
+
+      &:hover {
+        color: unset;
+
+        &:before {
+          background-color: rgba(34, 34, 34, 0.24);
+          transform: scale(1) perspective(0);
+        }
+      }
+
+      span {
+        font-size: 13px;
+        &:first-child {
+          font-size: 2.4rem;
+        }
+      }
+    }
+  }
+
+  > main {
+    order: 2;
+    flex-grow: 1;
+    flex: 1;
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 1rem;
+    overflow-y: scroll;
+
+    header {
+      padding: 1rem 0;
+
+      span {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        li {
+          display: flex;
+          align-items: center;
+          column-gap: 1rem;
+        }
+      }
+
+      figure {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        column-gap: 1rem;
+        border-radius: 999px;
+
+        figcaption {
+        }
+
+        img {
+          --width: 40px;
+          width: var(--width);
+          height: var(--width);
+          border: 1px solid #ddd;
+          border-radius: inherit;
+        }
+      }
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+    }
+
+    footer {
+      position: relative;
+      color: var(--black-700);
+      text-align: center;
+      padding: 1rem 0;
+    }
+  }
+
+  nav,
+  > div {
+    min-height: inherit;
+  }
+}
+.active {
+  background: rgba(0, 0, 0, 0.24);
+
+  &:before {
+    display: none;
+  }
+
+  span {
+    font-weight: bold;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.network {
+  position: fixed;
+  right: 0;
+
+  text-align: center;
+  column-gap: 0.5rem;
+  z-index: 999;
+
+  &[data-type='TESTNET'] {
+    background: #fdf6f3;
+  }
+  &[data-type='MAINNET'] {
+  }
+}
+
+.header {
+  color: #2e2e2e;
+  padding: 0.5rem 1rem;
+  // position: sticky;
+  // top: 0;
+  // z-index: 999;
+button {
+  box-shadow: none;
+}
+  &__logo {
+    column-gap: 1rem;
+  }
+}
+
+.nav {
+  position: fixed;
+  inset: 0;
+  width: 80vw;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 999;
+  isolation: isolate;
+  transform: translateX(100vw);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  figure {
+    img {
+      width: 80px;
+      margin: 0 auto;
+    }
+  }
+
+  ul {
+    flex: 1;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: 1rem;
+
+    li {
+      &:first-child {
+      }
+
+      button {
+        all: unset;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        column-gap: 0.5rem;
+        cursor: pointer;
+
+        span {
+          &:first-child {
+            font-size: 2rem;
+          }
+
+          &:last-child {
+            font-size: 1.1rem;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+  }
+
+  small {
+    text-align: center;
+    opacity: 0.8;
+  }
+}
+
+.navButton {
+  background-color: transparent;
+}

@@ -1,0 +1,8 @@
+.item {
+    position: relative;
+    text-decoration: none;
+    transition: transform 420ms cubic-bezier(.165,.84,.44,1);
+    &:hover {
+        transform: scale(1.05);
+    }
+}

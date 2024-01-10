@@ -1,0 +1,41 @@
+.section {
+  ul {
+    display: flex;
+    flex-flow: column nowrap;
+    row-gap: 2rem;
+  }
+
+  details {
+    border-radius: var(--global-border-radius);
+    padding: 1.5em;
+  }
+
+  summary {
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  [open] {
+    summary {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+/* Styling the Disclosure Widgets */
+
+details > summary {
+  background-color: #fdb;
+  cursor: pointer;
+  padding: .5rem 1rem;
+}
+
+details > summary > * {
+  display: inline;
+}
+
+details > div {
+  border: 2px solid #fdb;
+  margin-top: 0;
+  padding: 1rem;
+}

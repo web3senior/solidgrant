@@ -1,0 +1,56 @@
+.section {
+  details {
+    summary {
+      padding: 1rem;
+      width: 100%;
+      background-color: #eeeeee;
+      border: none;
+      box-shadow: 1px 1px 2px #bbbbbb;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: .5rem;
+      user-select: none;
+    }
+    > div {
+      padding: 1rem;
+    }
+    p {
+      background-color: #eeeeee;
+      padding: 1rem;
+      margin: 0;
+      box-shadow: 1px 1px 2px #bbbbbb;
+    }
+  }
+}
+
+.container {
+    padding: 0 1rem;
+}
+
+.team {
+  ul {
+    column-gap: 2rem;
+
+    li {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     row-gap: 1rem;
+    }
+  }
+
+  img {
+    width: 20px;
+    margin: 0 auto;
+  }
+
+  figure {
+    --avatar-r: 100px;
+
+    img {
+      border-radius: 999px;
+      width: var(--avatar-r);
+      height: var(--avatar-r);
+    }
+  }
+}

@@ -1,0 +1,43 @@
+.loading {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  row-gap: 0.5rem;
+  background-color: rgba(2,2,2,.8);
+
+  span {
+    &:first-child {
+      box-sizing: border-box;
+      border-radius: 50%;
+      border-width: 1.5px;
+      border-style: solid;
+      border-color: var(--area4) rgb(255 255 255 / 75%) rgb(255 255 255 / 75%);
+      border-image: initial;
+      animation-name: spinner;
+      animation-duration: 1.3s;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67);
+      width: 20px;
+      height: 20px;
+    }
+
+    &:last-child {
+      font-size: 0.9em;
+      color: #fff;
+    }
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
