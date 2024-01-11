@@ -24,11 +24,11 @@ function Home({ title }) {
             <img src={Logo} />
           </figure>
           <h4>{import.meta.env.VITE_NAME}</h4>
-          <p className='text-justify'>
-            Like tending a fledgling seed to a flourishing garden, granting great ideas fosters their potential, transforming sparks of ingenuity into impactful realities. Through
-            careful discovery, rigorous evaluation, and nurturing support, promising concepts blossom under the sun of resources and collaboration.
+          <p className="text-justify">
+            This DAO dapp is built on top of Allo Protocol, a decentralized governance platform on the Arbitrum network. The dapp allows members to propose and vote on proposals,
+            manage treasury funds, and track community activity.
           </p>
-          <button onClick={()=>auth.connect()}>Connect</button>
+          <button className='btn mt-40' onClick={() => auth.connect().then(()=>    window.location.href=('/usr/dashboard'))}>Connect</button>
         </div>
       </section>
     </>

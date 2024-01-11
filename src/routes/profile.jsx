@@ -31,15 +31,16 @@ export default function Profile({ title }) {
     let loadingToast = toast.loading(`Creating...`)
     const createProfileArgs = {
       nonce: Math.floor(Math.random() * 10000),
-      name: document.querySelector('[name="name"]').value,
+      name: document.querySelector('[name="registry_name"]').value,
       metadata: {
         protocol: BigInt(1),
-        pointer: document.querySelector('[name="pointer"]'),
+        pointer: document.querySelector('[name="pointer"]').value,
       },
       owner: auth.wallet,
       members: [auth.wallet],
     }
-    const myContract = new web3.eth.Contract(RegistryABI, '0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3')
+
+    const myContract = new web3.eth.Contract(RegistryABI,'0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3')
 
     myContract.methods
       .createProfile(createProfileArgs.nonce, createProfileArgs.name, createProfileArgs.metadata, createProfileArgs.owner, createProfileArgs.members)
@@ -49,7 +50,6 @@ export default function Profile({ title }) {
       })
       .then(async function (receipt) {
         console.log(receipt)
-        document.querySelector('textarea').value = receipt.toString()
         let profileId = await receipt.events.ProfileCreated.returnValues[0]
         toast.success(`Your profile created successfully. Profile ID: ${profileId}`)
         toast.dismiss(loadingToast)
@@ -57,6 +57,66 @@ export default function Profile({ title }) {
         // setProfileId(profileId)
       })
   }
+
+  // const handleCreateProfile = async () => {
+  //   const createProfileArgs = {
+  //     nonce: Math.floor(Math.random() * 10000),
+  //     name: 'Mintcollab',
+  //     metadata: {
+  //       protocol: BigInt(1),
+  //       pointer: 'bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi',
+  //     },
+  //     owner: auth.wallet,
+  //     members: [auth.wallet],
+  //   }
+
+  //   const myContract = new web3.eth.Contract(RegistryABI, '0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3')
+
+  //   myContract.methods
+  //     .createProfile(createProfileArgs.nonce, createProfileArgs.name, createProfileArgs.metadata, createProfileArgs.owner, createProfileArgs.members)
+  //     .send({ from: auth.wallet })
+  //     .once('sending', function (payload) {
+  //       console.log(payload)
+  //     })
+  //     .then(async function (receipt) {
+  //       console.log(receipt)
+  //       document.querySelector('textarea').value = receipt.toString()
+  //       let getProfileId = await receipt.events.ProfileCreated.returnValues[0]
+  //       setAnchor(await receipt.events.ProfileCreated.returnValues.anchor)
+  //       setProfileId(getProfileId)
+  //     })
+  //   // .once('sent', function (payload) {
+  //   //   console.log(payload)
+  //   // })
+  //   // .once('transactionHash', function (hash) {
+  //   //   console.log(hash)
+  //   // })
+  //   // .once('receipt', function (receipt) {
+  //   //   console.log(receipt)
+  //   // })
+  //   // .on('confirmation', function (confNumber, receipt, latestBlockHash) {
+  //   //   console.log(confNumber, receipt, latestBlockHash)
+  //   // })
+  //   // .on('error', function (error) {
+  //   //   console.log(error)
+  //   // })
+  //   // .on('receipt', async function (receipt) {
+  //   //   let getProfileId = await receipt.events.ProfileCreated.returnValues[0]
+  //   //   setProfileId(getProfileId)
+  //   // })
+  //   // .then(function (result) {
+  //   //   console.log(result)
+  //   // })
+  //   //var receipt = web3.eth.getTransactionReceipt(transactionHash);
+  //   // .on('transactionHash', function (hash) {
+  //   //   console.log(hash)
+  //   // })
+
+  //   // .on('confirmation', function (confirmationNumber, receipt) {
+  //   //   console.log(confirmationNumber, receipt)
+  //   // })
+  //   // .on('error', console.error)
+  // }
 
   const decodeProfileLog = async (data) => {
     let decodeResult = web3.eth.abi.decodeLog(
@@ -139,7 +199,7 @@ export default function Profile({ title }) {
             <ul>
               <li>
                 <label htmlFor="">Registry Name</label>
-                <input type="text" name="name" />
+                <input type="text" name="registry_name" />
               </li>
               <li>
                 <label htmlFor="">Members</label>
@@ -175,7 +235,6 @@ export default function Profile({ title }) {
                           Member:
                           <span className="badge badge-info badge-pill ml-10">{Array.isArray(item._members) ? JSON.parse(item._members).length : 1}</span>
                         </p>
-                       
                       </div>
 
                       <ul className="d-flex flex-column align-items-ceneter justify-content-between">

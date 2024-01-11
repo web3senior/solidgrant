@@ -44,6 +44,7 @@ export const connect = async () => {
     accounts = await web3.eth.getAccounts()
     toast.dismiss(loadingToast)
     toast.success(`Wallet successfuly connected`)
+
     return accounts[0]
   } catch (error) {
     toast.error(error.message)
@@ -59,7 +60,9 @@ export const isWalletConnected = async () => {
 
   try {
     let accounts = await web3.eth.getAccounts()
-    return accounts[0]
+    console.log(accounts)
+    if (accounts.length > 0) return accounts[0]
+    else return false
   } catch (error) {
     toast.error(error.message)
   }
@@ -69,6 +72,7 @@ export function AuthProvider({ children }) {
   const [wallet, setWallet] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isConnected, setIsConnected] = useState()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -81,11 +85,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     isWalletConnected().then((res) => {
+      console.log(res)
+      setIsConnected(res)
       setLoading(false)
       if (res) {
         console.log(res)
         setWallet(res)
-        // navigate('/usr/dashboard')
+        navigate('/usr/dashboard')
       } else {
         navigate('/home')
       }
@@ -104,7 +110,7 @@ export function AuthProvider({ children }) {
     resetPassword,
   }
 
-  if (!wallet) return <>Loading... !user</>
+  if (!wallet  && location.pathname !=='/home') return <>Loading... !user</>
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

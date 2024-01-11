@@ -31,7 +31,7 @@ const SplashScreen = ({ title }) => {
 
   return (
     <section className={`${styles.section} animate__animated animate__fadeIn`} ref={frameRef}>
-      <figure>
+      <figure>dd
         <img alt={import.meta.env.VITE_NAME} src={Logo} />
       </figure>
     </section>

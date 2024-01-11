@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useLocation, Link, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, Link, NavLink, useNavigate, useNavigation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useAuth, chainID } from './../contexts/AuthContext'
 import MaterialIcon from './helper/MaterialIcon'
@@ -37,16 +37,22 @@ let link = [
     name: 'IPFS',
     icon: 'dns',
     path: 'ipfs',
-  }
+  },
+  {
+    name: 'Setting',
+    icon: 'settings',
+    path: 'setting',
+  },
 ]
 
 export default function Root() {
   const [network, setNetwork] = useState()
   const [isLoading, setIsLoading] = useState()
-  const location = useLocation()
   const noHeader = ['/', '/splashscreen', '/tour']
   const auth = useAuth()
   const navigate = useNavigate()
+  const navigation = useNavigation()
+  const location = useLocation()
 
   const handleNavLink = (route) => {
     if (route) navigate(route)
@@ -106,35 +112,37 @@ export default function Root() {
           )}
 
           <div className={styles.rootLayout}>
-            <nav>
-              <Link to={`/`}>
-                <figure>
-                  <img alt="Logo" src={Logo} draggable={false} className="animate fade" />
-                </figure>
-              </Link>
+            {location.pathname !== '/home' && (
+              <nav>
+                <Link to={`/`}>
+                  <figure>
+                    <img alt="Logo" src={Logo} draggable={false} className="animate fade" />
+                  </figure>
+                </Link>
 
-              <ul>
-                {link &&
-                  link.map((item, i) => (
-                    <li key={i} className="animate blur">
-                      <NavLink to={`usr/${item.path}`} className={({ isActive, isPending }) => (isPending ? styles.pending : isActive ? styles.active : null)}>
-                        <MaterialIcon name={item.icon} />
-                        <span>{item.name}</span>
-                      </NavLink>
-                    </li>
-                  ))}
-              </ul>
+                <ul>
+                  {link &&
+                    link.map((item, i) => (
+                      <li key={i} className="animate blur">
+                        <NavLink to={`usr/${item.path}`} className={({ isActive, isPending }) => (isPending ? styles.pending : isActive ? styles.active : null)}>
+                          <MaterialIcon name={item.icon} />
+                          <span>{item.name}</span>
+                        </NavLink>
+                      </li>
+                    ))}
+                </ul>
 
-              <NavLink to={`logout`} className={({ isActive, isPending }) => (isPending ? styles.pending : isActive ? styles.active : null)} onClick={() => localStorage.clear()}>
-                <MaterialIcon name="logout" />
-                <span>Disconnect</span>
-              </NavLink>
-            </nav>
+                <NavLink to={`/`} className={({ isActive, isPending }) => (isPending ? styles.pending : isActive ? styles.active : null)} onClick={() => localStorage.clear()}>
+                  <MaterialIcon name="logout" />
+                  <span>Disconnect</span>
+                </NavLink>
+              </nav>
+            )}
 
             <main>
               <Toaster />
 
-              <header className={`${styles.header} d-flex align-items-center justify-content-between`}>
+              {location.pathname !== '/home' && ( <header className={`${styles.header} d-flex align-items-center justify-content-between`}>
                 <div className={`${styles.header__logo} d-flex align-items-center`}>
                   <input type="text" placeholder="search" />
                 </div>
@@ -148,7 +156,7 @@ export default function Root() {
                     <MenuIcon />
                   </button>
                 </div>
-              </header>
+              </header>)}
 
               <main>
                 <Outlet />
@@ -184,7 +192,7 @@ export default function Root() {
           </li>
           <li>
             X:{' '}
-            <a href="https://twitter.com/upcardlink" style={{ color: 'var(--area1)' }}>
+            <a href="https://twitter.com/" style={{ color: 'var(--area1)' }}>
               @upcardlink
             </a>
           </li>
