@@ -154,27 +154,7 @@ export default function Profile({ title }) {
           </div>
         </div>
 
-        <Heading title={`My profiles`} />
 
-        <div className={`${styles.assetItem} grid grid--fit grid--gap-1`} style={{ '--data-width': '300px' }}>
-          {profile &&
-            profile.length > 0 &&
-            profile.map((item, i) => {
-              return (
-                <div className="card grid__item" key={i}>
-                  <div className="card__body">
-                    <h6>{item._name}</h6>
-                    {/* <p>{item._owner}</p>
-                      <p>Member count: {Array.isArray(item._members) ? JSON.parse(item._members).length : 1}</p> */}
-                    <label htmlFor="">Profile ID</label>
-                    <input type="text" defaultValue={item.profileId} />
-                    <br />
-                    <p><Link to={`${item.profileId}`}>Manage Profile</Link></p>
-                  </div>
-                </div>
-              )
-            })}
-        </div>
       </div>
       {/* <Suspense fallback={<LoadingSpinner />}>
         <Await resolve={loaderData.profile} errorElement={<div>Could not load data 😬</div>}>

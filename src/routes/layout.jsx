@@ -34,35 +34,10 @@ let link = [
     path: 'pool',
   },
   {
-    name: 'Category',
-    icon: 'category',
-    path: 'category',
-  },
-  {
-    name: 'Builder',
-    icon: 'code_blocks',
-    path: 'builder',
-  },
-  {
-    name: 'Map',
-    icon: 'map',
-    path: 'gis',
-  },
-  {
-    name: 'Report',
-    icon: 'donut_small',
-    path: 'report',
-  },
-  {
     name: 'IPFS',
     icon: 'dns',
     path: 'ipfs',
-  },
-  {
-    name: 'Setting',
-    icon: 'settings',
-    path: 'setting',
-  },
+  }
 ]
 
 export default function Root() {

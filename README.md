@@ -1,9 +1,18 @@
-# React + Vite
+# Solidgrant
+This DAO dapp is built on top of Allo Protocol, a decentralized governance platform on the Arbitrum network. The dapp allows members to propose and vote on proposals, manage treasury funds, and track community activity.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Demo
+https://solidgrant.click
 
-Currently, two official plugins are available:
+## Features
+- Manage registry
+- Manage funds
+- Register recipient and allocate funds
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-"# solidgrant" 
+## Install
+```
+git clone 
+cd solidgrant
+npm i
+npm run dev
+```

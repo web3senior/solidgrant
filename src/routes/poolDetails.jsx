@@ -23,6 +23,7 @@ export default function Profile({ title }) {
   const [loaderData, setLoaderData] = useState(useLoaderData())
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
+    const [profileId, setProfileId] = useState()
   const [pool, setPool] = useState()
   const [strategyAddr, setStrategyAddr] = useState()
   const [registryAddr, setRegistryAddr] = useState()
@@ -31,40 +32,77 @@ export default function Profile({ title }) {
   const [totalFund, setTotalFund] = useState(BigInt(0))
   const [anchor, setAnchor] = useState()
   const [recipient, setRecipient] = useState()
+  const [poolStatus, setPoolStatus] = useState(null)
+  const [allocationStartTime, setAllocationStartTime] = useState()
+  const [allocationEndTime, setAllocationEndTime] = useState()
+  const [approvalThreshould, setApprovalThreshould] = useState()
   const auth = useAuth()
   let errors = useActionData()
   const location = useLocation()
   const params = useParams()
 
-  const handleNewReciepeint = async () => {
-    // let addr = document.querySelector('[name="manager_addr_add"]').value
+  const handleDistribute = async (e) => {
+    const txData = allo.distribute(params.poolId, ['0xbbeeed010f67978D410ceFdB416Ca5F0207fad9c'], '')
+    console.log(txData)
 
-    // if (addr === '') {
-    //   toast.error(`Address can't be empty`)
-    //   return
-    // }
+    try {
+      web3.eth
+        .sendTransaction({
+          from: auth.wallet,
+          to: txData.to,
+          data: txData.data,
+          value: BigInt(txData.value),
+        })
+        .then(function (receipt) {
+          console.log(receipt)
+          toast.dismiss(t)
+          toast.success(`Added`)
+        })
+    } catch (error) {
+      console.log('Registering Application', e)
+    }
+  }
+
+  const handleAllocate = async (recipientId) => {
+    strategy.setPoolId(params.poolId)
+    const txData = strategy.getAllocationData(recipientId, 2)
+    console.log(txData)
+
+    try {
+      web3.eth
+        .sendTransaction({
+          from: auth.wallet,
+          to: txData.to,
+          data: txData.data,
+          value: BigInt(txData.value),
+        })
+        .then(function (receipt) {
+          console.log(receipt)
+          toast.dismiss(t)
+          toast.success(`Added`)
+        })
+    } catch (error) {
+      console.log('Registering Application', e)
+    }
+  }
+
+  const handleNewReciepeint = async () => {
+    let requested_amount_recipient = document.querySelector('[name="requested_amount_recipient"]').value
+
     await strategy.setPoolId(params.poolId).then(console.log)
 
     const registerRecipientData = strategy.getRegisterRecipientData({
       registryAnchor: anchor,
-      recipientAddress: auth.wallet, //The wallet to which the funds would be sent to.
-      requestedAmount: BigInt(web3.utils.toWei('0.000001', 'ether')),
+      recipientAddress:'0x1E117008E1a544Bbe12A2d178169136703430190',//auth.wallet, //The wallet to which the funds would be sent to.
+      requestedAmount: BigInt(web3.utils.toWei(requested_amount_recipient, 'ether')),
       metadata: {
         protocol: BigInt(1),
         pointer: 'QmRoRQ9E6qqP8GKSuMZzFuimYqrk6d6S8uLVB3EtTGg4t7',
       },
     })
 
-    console.log(registerRecipientData)
 
     const t = toast.loading(`Registering`)
-    // const transactionData = allo.registerRecipient({
-    //   poolId: BigInt(params.poolId),
-    //   strategyData: registerRecipientData
-    // })
-    // console.log(transactionData)
-
-    // return
 
     try {
       web3.eth
@@ -81,6 +119,7 @@ export default function Profile({ title }) {
         })
     } catch (error) {
       console.log('Registering Application', e)
+      toast.dismiss(t)
     }
   }
 
@@ -214,6 +253,28 @@ export default function Profile({ title }) {
     allo.getRegistry().then((res) => setRegistryAddr(res))
   }
 
+  const callIsPoolActive = (strategyAddressRes) => {
+    strategy.setContract(strategyAddressRes)
+    strategy.isPoolActive(params.poolId).then((res) => {
+      console.log(res)
+      setPoolStatus(res)
+    })
+  }
+
+  const callIsAllocationDates = (strategyAddressRes) => {
+    strategy.setContract(strategyAddressRes)
+
+    strategy.allocationStartTime(params.poolId).then((res) => {
+      let date = new Date(Number(res) * 1000).toLocaleString()
+      setAllocationStartTime(date)
+    })
+
+    strategy.allocationEndTime(params.poolId).then((res) => {
+      let date = new Date(Number(res) * 1000).toLocaleString()
+      setAllocationEndTime(date)
+    })
+  }
+
   const callPoolAmount = async (strategyAddressRes) => {
     strategy.setContract(strategyAddressRes)
     strategy.getPoolAmount(params.poolId).then((res) => {
@@ -276,11 +337,40 @@ export default function Profile({ title }) {
         toast.error(`Address can't be empty`)
         return
       }
+
+      const result = await allo.getStrategy(poolId)
+      setStrategyAddr(result)
+      return result
     }
 
-    const result = allo.getStrategy(poolId)
-    setStrategyAddr(result)
-    return result
+    return await allo.getStrategy(poolId)
+  }
+
+  const handleSetAllocator = async () => {
+    // strategy.setContract('0xBab7309F6e871b3cD015f43f1774C1F95679CF8E')
+    let allocator_address = document.querySelector('[name="allocator_address"]').value
+
+    const transactionData = strategy.getBatchSetAllocatorData([
+      {
+        allocatorAddress: allocator_address,
+        flag: true,
+      },
+    ])
+
+    console.log(transactionData)
+
+    web3.eth
+      .sendTransaction({
+        from: auth.wallet,
+        to: transactionData.to,
+        data: transactionData.data,
+        value: BigInt(transactionData.value),
+      })
+      .then(function (receipt) {
+        console.log(receipt)
+        toast.dismiss(t)
+        toast.success(`Added`)
+      })
   }
 
   const decodeFundPoolLog = (data) => {
@@ -300,14 +390,19 @@ export default function Profile({ title }) {
     return decodeResult
   }
 
+  const getRegistryProfile = async (profileId) => {
+    const t = toast.loading(`Reading anchor`)
+    await registry.getProfileById(profileId).then((data) => {
+      console.log(data)
+      setAnchor(data.anchor)
+      toast.dismiss(t)
+    })
+  }
+
   const decodeRecipientLog = (data) => {
     let decodeResult = web3.eth.abi.decodeLog(
       [
-        {
-          internalType: 'bytes',
-          name: '_data',
-          type: 'bytes',
-        },
+        { internalType: 'bytes', name: '_data', type: 'bytes' },
         {
           internalType: 'address',
           name: '_sender',
@@ -320,13 +415,26 @@ export default function Profile({ title }) {
     return decodeResult
   }
 
-  const getRegistryProfile = async (profileId) => {
-    const t = toast.loading(`Reading anchor`)
-    await registry.getProfileById(profileId).then((data) => {
-      console.log(data)
-      setAnchor(data.anchor)
-      toast.dismiss(t)
-    })
+  const decodeRecipientStatus = async (recipientId) => {
+    let result = await strategy.getRecipientStatus(recipientId)
+    switch (result.toString()) {
+      case '0':
+        return 'None'
+      case '1':
+        return 'Pending'
+      case '2':
+        return 'Accepted'
+      case '3':
+        return 'Rejected'
+      case '4':
+        return 'Appealed'
+      case '5':
+        return 'InReview'
+      case '6':
+        return 'Canceled'
+      default:
+        break
+    }
   }
 
   useEffect(() => {
@@ -356,24 +464,40 @@ export default function Profile({ title }) {
     })
 
     handleGetStrategy(params.poolId).then((strategyAddressRes) => {
-      callPoolAmount(strategyAddressRes)
+      callPoolAmount(strategyAddressRes) // total pool amount
+      callIsPoolActive(strategyAddressRes)
+      callIsAllocationDates(strategyAddressRes)
 
-      getRecipient(strategyAddressRes).then((res) => { // Get applications
+      strategy.setContract(strategyAddressRes)
+      strategy.approvalThreshold(params.poolId).then((res) => {
+        setApprovalThreshould(web3.utils.toNumber(res))
+      })
+
+      getRecipient(strategyAddressRes).then((res) => {
+        // Get applications
         let decodeRecipint = []
 
         res.result.map(async (item, i) => {
           let decodedData = decodeRecipientLog(item.data)
-          // decodedData['recipientId'] = item.topics[1]
-          // decodedData['timeStamp'] = new Date(Number(item.timeStamp) * 1000)
-          // decodedData['transactionHash'] = item.transactionHash
+          let recipientId = web3.eth.abi.decodeParameter('address', item.topics[1])
 
-          // let transactionData = await web3.eth.getTransaction(item.transactionHash)
-          // decodedData['from'] = transactionData.from
+          decodedData['recipientId'] = recipientId
+          decodedData['timeStamp'] = new Date(Number(item.timeStamp) * 1000)
+          decodedData['transactionHash'] = item.transactionHash
+
+          let transactionData = await web3.eth.getTransaction(item.transactionHash)
+          decodedData['from'] = transactionData.from
+
+          let get_data = await strategy.getRecipient(recipientId)
+          decodedData['get_data'] = get_data
+          decodedData['status'] = await decodeRecipientStatus(recipientId)
 
           console.log(decodedData)
+
           decodeRecipint.push(decodedData)
 
           if (++i === res.result.length) {
+            console.log(decodeRecipint)
             setRecipient(decodeRecipint)
           }
         })
@@ -383,7 +507,6 @@ export default function Profile({ title }) {
 
   return (
     <section className={`${styles.section} animate fade`}>
-      <button onClick={() => handleNewReciepeint()}>Register Recipient</button>
       <Heading title={title} />
 
       {pool && (
@@ -392,7 +515,7 @@ export default function Profile({ title }) {
             <div className="card__body">
               <ul className="d-flex flex-column" style={{ rowGap: '1rem' }}>
                 <li>
-                  <label htmlFor="">Token of pool: </label>
+                  <label htmlFor="">Token of the pool: </label>
                   <span className="text-danger">{pool.token.toLowerCase()}</span>
                 </li>
                 <li>
@@ -424,6 +547,22 @@ export default function Profile({ title }) {
                   <span>{pool.strategy}</span>
                 </li>
                 <li>
+                  <label htmlFor="">StartTime: </label>
+                  <span>{allocationStartTime}</span>
+                </li>
+                <li>
+                  <label htmlFor="">EndTime: </label>
+                  <span>{allocationEndTime}</span>
+                </li>
+                <li>
+                  <label htmlFor="">Approval Threshould: </label>
+                  <span>{approvalThreshould}</span>
+                </li>
+                <li>
+                  <label htmlFor="">Status: </label>
+                  <span>{poolStatus ? 'Yes' : 'No'}</span>
+                </li>
+                <li>
                   <label htmlFor="">Metadata: </label>
                   <a href={`https://ipfs.io/ipfs/${pool.metadata.pointer}`} className="ml-10 text-primary" target="_blank">
                     <span>{pool.metadata.pointer}</span>
@@ -433,7 +572,7 @@ export default function Profile({ title }) {
             </div>
           </div>
 
-          <Heading title={`Manage`} />
+          <Heading title={`Manage Pool`} />
           <div className={`${styles.assetItem} grid grid--fit grid--gap-1`} style={{ '--data-width': '300px' }}>
             <div className="card">
               <div className="card__header">Fund Pool</div>
@@ -552,6 +691,22 @@ export default function Profile({ title }) {
               </div>
             </div>
 
+            <div className="card">
+              <div className="card__header">Set Allocator</div>
+              <div className="card__body">
+                <div className="form">
+                  <ul className="d-flex flex-column" style={{ rowGap: '1rem' }}>
+                    <li>
+                      <input type="text" name="allocator_address" placeholder="Address" />
+                    </li>
+                    <li>
+                      <button onClick={() => handleSetAllocator()}>Check</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
             <div className="card" style={{ opacity: '0.4' }}>
               <div className="card__header">Has Role</div>
               <div className="card__body">
@@ -561,7 +716,7 @@ export default function Profile({ title }) {
                       <input type="text" name="role" placeholder="" />
                     </li>
                     <li>
-                      <input type="text" name="account_addr" placeholder="Adress" />
+                      <input type="text" name="account_addr" placeholder="Address" />
                     </li>
                     <li>
                       <button onClick={() => handleHasRole()}>Check</button>
@@ -590,7 +745,7 @@ export default function Profile({ title }) {
                   <div className="card" key={i}>
                     <div className="card__body">
                       <div className="form">
-                        <ul className="d-flex flex-column" style={{ rowGap: '1rem' }}>
+                        <ul className="d-flex flex-column" style={{ rowGap: '.1rem' }}>
                           <li>
                             <span className="badge badge-success">{web3.utils.fromWei(Number(item.amount), 'ether')} ETH</span>
                           </li>
@@ -625,6 +780,7 @@ export default function Profile({ title }) {
           </div>
 
           <Heading title={`Applications`} />
+
           <div className={`${styles.assetItem} grid grid--fit grid--gap-1`} style={{ '--data-width': '800px' }}>
             {recipient &&
               recipient.map((item, i) => {
@@ -633,11 +789,16 @@ export default function Profile({ title }) {
                     <div className="card__body">
                       <div className="form">
                         <ul className="d-flex flex-column" style={{ rowGap: '1rem' }}>
-                          {/* <li>
-                            Sender: <span>{item._sender}</span>
+                          <li>
+                            recipientId: <span>{item.recipientId}</span>
                           </li>
                           <li>
-                            <span className="badge badge-success">{web3.utils.fromWei(Number(item.amount), 'ether')} ETH</span>
+                            Requested Amount:
+                            <span className="badge badge-success ml-10">{web3.utils.fromWei(item.get_data.requestedAmount, 'ether')} ETH</span>
+                          </li>
+                          <li>
+                            Status:
+                            <span className="badge badge-dark ml-10">{item.status}</span>
                           </li>
                           <li>
                             <a href={`https://goerli.etherscan.io/tx/${item.transactionHash}`} target="_blank">
@@ -646,7 +807,12 @@ export default function Profile({ title }) {
                           </li>
                           <li>
                             <span className="text-muted">{item.timeStamp.toLocaleString()}</span>
-                          </li> */}
+                          </li>
+                          <li>
+                            <button onClick={() => handleAllocate(item.recipientId)}>Allocate: Accepted</button>
+                          
+                            <button onClick={() => handleDistribute()}>Distribute</button>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -663,6 +829,18 @@ export default function Profile({ title }) {
                 ))}
               </>
             )}
+          </div>
+
+          <div className="card mt-40">
+            <div className="card__header">New Recipient</div>
+            <div className="card__body">
+              <div>
+                <input type="text" name="requested_amount_recipient" defaultValue={`0.00001`} />
+              </div>
+              <button onClick={() => handleNewReciepeint()} className="btn mt-20">
+                Register Recipient
+              </button>
+            </div>
           </div>
         </>
       )}

@@ -190,16 +190,6 @@ export default function Setting({ title }) {
               </div>
             </div>
           </div>
-
-          <div className={`grid__item ${styles.item}`}>
-            <label htmlFor="">Project</label>
-            <div className="card">
-              <div className="card__body">
-                <p>0</p>
-                <small>Out of --</small>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 

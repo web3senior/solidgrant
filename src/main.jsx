@@ -17,6 +17,7 @@ import Strategy from './routes/strategy.jsx'
 import Pool from './routes/pool.jsx'
 import PoolDetails from './routes/poolDetails.jsx'
 import IPFS from './routes/ipfs.jsx'
+import PoolNew from './routes/PoolNew.jsx'
 // import Contact from './routes/contact.jsx'
 // import Feedback from './routes/feedback.jsx'
 // import About from './routes/about.jsx'
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'allo',
-            element: <Allo title={`Allo Protocol`} />,
+            element: <Allo title={`Allo Protocol on Arbitrum Network`} />,
           },
           {
             path: 'profile',
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
               {
                 path: ':poolId',
                 element: <PoolDetails title={`Pool Details`} />,
+              },
+              {
+                path: 'new',
+                element: <PoolNew title={`New Pool`} />,
               },
             ],
           },

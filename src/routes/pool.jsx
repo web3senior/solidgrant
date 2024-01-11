@@ -6,6 +6,7 @@ import LoadingSpinner from './components/LoadingSpinner'
 import { StrategyType } from '@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types'
 import { useAuth, web3, allo, strategy } from './../contexts/AuthContext'
 import { AlloABI } from './../abi/Allo'
+import Shimmer from './helper/Shimmer'
 import Heading from './helper/Heading'
 import toast from 'react-hot-toast'
 import styles from './Pool.module.scss'
@@ -22,7 +23,7 @@ export default function Pool({ title }) {
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState()
-  const [pool, setPool] = useState()
+  const [pool, setPool] = useState([])
   const [strategyAddr, setStrategyAddr] = useState('0x030B9c43e18d3054717E4b0D195893Ca7A9A32F4')
   const auth = useAuth()
   let errors = useActionData()
@@ -124,33 +125,6 @@ export default function Pool({ title }) {
         toast.dismiss(t)
         toast.success(`Pool created`)
       })
-
-    // const createPoolArgs = {
-    //   nonce: Math.floor(Math.random() * 10000),
-    //   name: document.querySelector('[name="name"]').value,
-    //   metadata: {
-    //     protocol: BigInt(1),
-    //     pointer: 'bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi',
-    //   },
-    //   owner: auth.wallet,
-    //   members: [auth.wallet],
-    // }
-
-    // const myContract = new web3.eth.Contract(AlloABI, '0x1133eA7Af70876e64665ecD07C0A0476d09465a1')
-
-    // myContract.methods
-    //   .createProfile(createProfileArgs.nonce, createProfileArgs.name, createProfileArgs.metadata, createProfileArgs.owner, createProfileArgs.members)
-    //   .send({ from: myAddress })
-    //   .once('sending', function (payload) {
-    //     console.log(payload)
-    //   })
-    //   .then(async function (receipt) {
-    //     console.log(receipt)
-    //     document.querySelector('textarea').value = receipt.toString()
-    //     let getProfileId = await receipt.events.ProfileCreated.returnValues[0]
-    //     setAnchor(await receipt.events.ProfileCreated.returnValues.anchor)
-    //     setProfileId(getProfileId)
-    //   })
   }
 
   const decodePoolLog = async (data) => {
@@ -215,19 +189,26 @@ export default function Pool({ title }) {
   useEffect(() => {
     const t = toast.loading(`Fetching pools`)
     getPool().then((res) => {
+      let decodedPoolsMine = []
       let decodedPools = []
+
       res.result.map(async (item, i) => {
-        let decodedData = await decodePoolLog(item.data)
-        let transactionData = await getTransactionInfo(item.transactionHash)
+        decodePoolLog(item.data).then(async (decodedData) => {
+          let transactionData = await getTransactionInfo(item.transactionHash)
+          decodedData['from'] = transactionData['from']
+          decodedData['poolId'] = web3.utils.hexToNumber(item.topics[1])
+          decodedData['createdAt'] = new Date(Number(item.timeStamp) * 1000)
 
-        decodedData['poolId'] = web3.utils.hexToNumber(item.topics[1])
-        decodedData['createdAt'] = new Date(Number(item.timeStamp) * 1000)
+          if (transactionData.from.trim().toLowerCase().toString() === auth.wallet.trim().toLowerCase().toString()) {
+            decodedPoolsMine.push(decodedData)
+          } else decodedPools.push(decodedData)
 
-        if (transactionData.from.trim().toLowerCase().toString() === auth.wallet.trim().toLowerCase().toString()) decodedPools.push(decodedData)
-        if (++i === res.result.length) {
-          setPool(decodedPools)
-          toast.dismiss(t)
-        }
+          if (++i === res.result.length) {
+            let finalData = decodedPoolsMine.sort((a, b) => b.poolId - a.poolId).concat(decodedPools.sort((a, b) => b.poolId - a.poolId))
+            setPool(finalData)
+            toast.dismiss(t)
+          }
+        })
       })
     })
   }, [])
@@ -235,6 +216,61 @@ export default function Pool({ title }) {
   return (
     <section className={`${styles.section} animate fade`}>
       <Heading title={title} />
+
+      <ul className="d-flex flex-row align-items-center justify-content-between mb-20">
+        <li>
+          <div className="alert alert--dark" style={{ margin: '0' }}>
+            The all pools created on the top of Allo Protocols.
+          </div>
+        </li>
+        <li>
+          <Link to={`new`} className="btn">
+            Create a new pool
+          </Link>
+        </li>
+      </ul>
+
+      <div className={`${styles.assetItem} grid grid--fit grid--gap-1`} style={{ '--data-width': '400px' }}>
+        {pool &&
+          pool.length > 0 &&
+          pool.map((item, i) => {
+            return (
+              <Link to={`${item.poolId}`} key={i}>
+                <div className="card grid__item" key={i}>
+                  <div className="card__body">
+                    {item.from.toLowerCase().toString() === auth.wallet.toLowerCase().toString() && <div className={`${styles.you} animate glow`}></div>}
+                    <p>
+                      Pool Id: <b className="text-primary">{item.poolId}</b>
+                    </p>
+                    <p>
+                      Primary Amount: <span className="badge badge-dark">{web3.utils.fromWei(Number(item._amount), 'ether')} ETH</span>
+                    </p>
+                    <p>{item._owner}</p>
+                    <p>
+                      Manager:
+                      <span className="badge badge-warning badge-pill ml-10">{Array.isArray(item._members) ? JSON.parse(item._members).length : 1}</span>
+                    </p>
+                    <small>Created at {item.createdAt.toDateString()}</small>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+
+        {pool.length < 1 && (
+          <>
+            {[0, 0, 0, 0, 0, 0, 0, 0, 0].map((item, i) => (
+              <Shimmer key={i}>
+                <div className={styles.poolShimmer}></div>
+              </Shimmer>
+            ))}
+          </>
+        )}
+      </div>
+    </section>
+  )
+}
+/*
       <div className={`__container`} data-width={`small`}>
         <div className="card mb-40">
           <div className="card__header">Create A New Pool</div>
@@ -294,33 +330,4 @@ export default function Pool({ title }) {
           </div>
         </div>
       </div>
-
-      <div className={`${styles.assetItem} grid grid--fit grid--gap-1`} style={{ '--data-width': '300px' }}>
-        {pool &&
-          pool.length > 0 &&
-          pool.map((item, i) => {
-            return (
-              <Link to={`${item.poolId}`} key={i}>
-                <div className="card grid__item" key={i}>
-                  <div className="card__body">
-                    <p>
-                      Id: <b>{item.poolId}</b>
-                    </p>
-                    <p>
-                      Amount: <span className="badge badge-dark">{web3.utils.fromWei(Number(item._amount), 'ether')} ETH</span>
-                    </p>
-                    <p>{item._owner}</p>
-                    <p>
-                      Manager:
-                      <span className="badge badge-warning badge-pill ml-10">{Array.isArray(item._members) ? JSON.parse(item._members).length : 1}</span>
-                    </p>
-                    <small>Created at {item.createdAt.toDateString()}</small>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
-      </div>
-    </section>
-  )
-}
+*/
