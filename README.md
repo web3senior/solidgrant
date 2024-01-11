@@ -4,6 +4,9 @@ This DAO dapp is built on top of Allo Protocol, a decentralized governance platf
 ## Demo
 https://solidgrant.click
 
+## Screenshot
+<img src="shot.png"/>
+
 ## Features
 - Manage registry
 - Manage funds

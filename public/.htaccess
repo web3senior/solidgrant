@@ -1,6 +1,6 @@
 RewriteEngine On
 RewriteCond %{SERVER_PORT} 80
-RewriteRule ^(.*)$ https://upcard.link/$1 [R,L]
+RewriteRule ^(.*)$ https://solidgrant.click/$1 [R,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.html [L,QSA]
