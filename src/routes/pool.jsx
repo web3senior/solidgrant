@@ -187,8 +187,10 @@ export default function Pool({ title }) {
   const getTransactionInfo = async (txn) => web3.eth.getTransaction(txn)
 
   useEffect(() => {
+    console.log(`Allo Address: ${allo.address()}`)
     const t = toast.loading(`Fetching pools`)
     getPool().then((res) => {
+      console.log(res)
       let decodedPoolsMine = []
       let decodedPools = []
 

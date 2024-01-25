@@ -23,7 +23,7 @@ export default function Profile({ title }) {
   const [loaderData, setLoaderData] = useState(useLoaderData())
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
-    const [profileId, setProfileId] = useState()
+  const [profileId, setProfileId] = useState()
   const [pool, setPool] = useState()
   const [strategyAddr, setStrategyAddr] = useState()
   const [registryAddr, setRegistryAddr] = useState()
@@ -42,7 +42,7 @@ export default function Profile({ title }) {
   const params = useParams()
 
   const handleDistribute = async (e) => {
-    const txData = allo.distribute(params.poolId, ['0xbbeeed010f67978D410ceFdB416Ca5F0207fad9c'], '')
+    const txData = allo.distribute(params.poolId, [auth.wallet], '')
     console.log(txData)
 
     try {
@@ -93,14 +93,13 @@ export default function Profile({ title }) {
 
     const registerRecipientData = strategy.getRegisterRecipientData({
       registryAnchor: anchor,
-      recipientAddress:'0x1E117008E1a544Bbe12A2d178169136703430190',//auth.wallet, //The wallet to which the funds would be sent to.
+      recipientAddress: auth.wallet, //auth.wallet, //The wallet to which the funds would be sent to.
       requestedAmount: BigInt(web3.utils.toWei(requested_amount_recipient, 'ether')),
       metadata: {
         protocol: BigInt(1),
         pointer: 'QmRoRQ9E6qqP8GKSuMZzFuimYqrk6d6S8uLVB3EtTGg4t7',
       },
     })
-
 
     const t = toast.loading(`Registering`)
 
@@ -142,10 +141,7 @@ export default function Profile({ title }) {
     }
 
     const t = toast.loading(`Sending request`)
-    const transactionData = allo.addPoolManager({
-      poolId: params.poolId.toString('hex'),
-      manager: addr,
-    })
+    const transactionData = allo.addPoolManager(params.poolId, addr)
     console.log(transactionData)
 
     web3.eth
@@ -171,24 +167,26 @@ export default function Profile({ title }) {
     }
 
     const t = toast.loading(`Sending request`)
-    const transactionData = allo.removePoolManager({
-      poolId: params.poolId.toString('hex'),
-      manager: addr,
-    })
+    const transactionData = allo.removePoolManager(params.poolId, addr)
     console.log(transactionData)
 
-    web3.eth
-      .sendTransaction({
-        from: auth.wallet,
-        to: transactionData.to,
-        data: transactionData.data,
-        value: BigInt(transactionData.value),
-      })
-      .then(function (receipt) {
-        console.log(receipt)
-        toast.dismiss(t)
-        toast.success(`Removed`)
-      })
+    try {
+      web3.eth
+        .sendTransaction({
+          from: auth.wallet,
+          to: transactionData.to,
+          data: transactionData.data,
+          value: BigInt(transactionData.value),
+        })
+        .then(function (receipt) {
+          console.log(receipt)
+          toast.dismiss(t)
+          toast.success(`Removed`)
+        })
+    } catch (error) {
+      toast.error(error.message)
+      toast.dismiss(t)
+    }
   }
 
   const handleFundPool = async () => {
@@ -532,7 +530,7 @@ export default function Profile({ title }) {
                 </li>
                 <li>
                   <label htmlFor="">Profile/ Registry Id: </label>
-                  <Link to={`/profile/${pool.profileId}`}>{pool.profileId}</Link>
+                  <Link to={`/usr/profile/${pool.profileId}`} className='text-info'>{pool.profileId}</Link>
                 </li>
                 <li>
                   <label htmlFor="">Anchor Address: </label>
@@ -728,6 +726,7 @@ export default function Profile({ title }) {
           </div>
 
           <Heading title={`Pool Funds`} />
+          <p className="alert alert--warning border">It does take a while to show funds transactions</p>
           {fund && (
             <div className="card mb-10">
               <div className="card__body d-flex">
@@ -810,8 +809,8 @@ export default function Profile({ title }) {
                           </li>
                           <li>
                             <button onClick={() => handleAllocate(item.recipientId)}>Allocate: Accepted</button>
-                          
-                            <button onClick={() => handleDistribute()}>Distribute</button>
+
+                            <button onClick={() => handleDistribute()} className='ml-10'>Distribute</button>
                           </li>
                         </ul>
                       </div>

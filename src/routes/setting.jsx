@@ -4,7 +4,6 @@ import { getProfile } from '../util/api'
 import { Title } from './helper/DocumentTitle'
 import LoadingSpinner from './components/LoadingSpinner'
 import Heading from './helper/Heading'
-import arrowIcon from './../assets/arrow_icon.svg'
 import styles from './Setting.module.scss'
 
 export const loader = async ({ request }) => {
@@ -25,9 +24,9 @@ export default function Setting({ title }) {
 
   return (
     <section className={`${styles.section} animate fade`}>
-      <Heading title={``} />
+      <Heading title={title} />
 
-      <Suspense fallback={<LoadingSpinner />}>
+      {/* <Suspense fallback={<LoadingSpinner />}>
         <Await resolve={loaderData.profile} errorElement={<div>Could not load data 😬</div>}>
           {(data) => (
             <>
@@ -44,7 +43,7 @@ export default function Setting({ title }) {
             </>
           )}
         </Await>
-      </Suspense>
+      </Suspense> */}
     </section>
   )
 }

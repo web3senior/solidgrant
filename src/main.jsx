@@ -18,7 +18,7 @@ import Pool from './routes/pool.jsx'
 import PoolDetails from './routes/poolDetails.jsx'
 import IPFS from './routes/ipfs.jsx'
 import PoolNew from './routes/PoolNew.jsx'
-// import Contact from './routes/contact.jsx'
+import Setting from './routes/setting.jsx'
 // import Feedback from './routes/feedback.jsx'
 // import About from './routes/about.jsx'
 // import FAQ from './routes/faq.jsx'
@@ -74,6 +74,10 @@ const router = createBrowserRouter([
                 element: <ProfileDetails title={`Profile Details`} />,
               },
             ],
+          },
+          {
+            path: 'setting',
+            element: <Setting title={`Setting`} />,
           },
           {
             path: 'strategy',

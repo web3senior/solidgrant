@@ -38,11 +38,6 @@ let link = [
     icon: 'dns',
     path: 'ipfs',
   },
-  {
-    name: 'Setting',
-    icon: 'settings',
-    path: 'setting',
-  },
 ]
 
 export default function Root() {
@@ -126,6 +121,7 @@ export default function Root() {
                       <li key={i} className="animate blur">
                         <NavLink to={`usr/${item.path}`} className={({ isActive, isPending }) => (isPending ? styles.pending : isActive ? styles.active : null)}>
                           <MaterialIcon name={item.icon} />
+                          <i class="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>
                           <span>{item.name}</span>
                         </NavLink>
                       </li>
@@ -142,21 +138,23 @@ export default function Root() {
             <main>
               <Toaster />
 
-              {location.pathname !== '/home' && ( <header className={`${styles.header} d-flex align-items-center justify-content-between`}>
-                <div className={`${styles.header__logo} d-flex align-items-center`}>
-                  <input type="text" placeholder="search" />
-                </div>
+              {location.pathname !== '/home' && (
+                <header className={`${styles.header} d-flex align-items-center justify-content-between`}>
+                  <div className={`${styles.header__logo} d-flex align-items-center`}>
+                    <input type="text" placeholder="search" />
+                  </div>
 
-                <div className={`d-flex align-items-center`} style={{ columnGap: '1rem' }}>
-                  <ul className={`d-flex flex-column align-items-center`}>
-                    <li>{auth.wallet && `${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}</li>
-                  </ul>
+                  <div className={`d-flex align-items-center`} style={{ columnGap: '1rem' }}>
+                    <ul className={`d-flex flex-column align-items-center`}>
+                      <li>{auth.wallet && `${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}</li>
+                    </ul>
 
-                  <button className={styles.navButton} onClick={() => handleNavLink()}>
-                    <MenuIcon />
-                  </button>
-                </div>
-              </header>)}
+                    <button className={styles.navButton} onClick={() => handleNavLink()}>
+                      <MenuIcon />
+                    </button>
+                  </div>
+                </header>
+              )}
 
               <main>
                 <Outlet />

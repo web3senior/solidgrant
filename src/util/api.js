@@ -17,7 +17,7 @@ export const getProfile = async (address, topic0) => {
   }
 
   try {
-    const response = await fetch(`https://api-goerli.etherscan.io/api?${parameters.toString()}`, requestOptions)
+    const response = await fetch(`${import.meta.env.VITE_BLOCKSCAN_API_ADDR + parameters.toString()}`, requestOptions)
     if (!response.ok) throw new Response('Failed to get data', { status: 500 })
     return response.json()
   } catch (error) {
@@ -42,7 +42,7 @@ export const getPool = async (address, topic0) => {
   }
 
   try {
-    const response = await fetch(`https://api-goerli.etherscan.io/api?${parameters.toString()}`, requestOptions)
+    const response = await fetch(`${import.meta.env.VITE_BLOCKSCAN_API_ADDR + parameters.toString()}`, requestOptions)
     if (!response.ok) throw new Response('Failed to get data', { status: 500 })
     return response.json()
   } catch (error) {
@@ -67,7 +67,7 @@ export const getFund = async (address, topic0) => {
   }
 
   try {
-    const response = await fetch(`https://api-goerli.etherscan.io/api?${parameters.toString()}`, requestOptions)
+    const response = await fetch(`${import.meta.env.VITE_BLOCKSCAN_API_ADDR + parameters.toString()}`, requestOptions)
     if (!response.ok) throw new Response('Failed to get data', { status: 500 })
     return response.json()
   } catch (error) {
@@ -94,7 +94,7 @@ export const getRecipient = async (address, topic0) => {
   }
 
   try {
-    const response = await fetch(`https://api-goerli.etherscan.io/api?${parameters.toString()}`, requestOptions)
+    const response = await fetch(`${import.meta.env.VITE_BLOCKSCAN_API_ADDR + parameters.toString()}`, requestOptions)
     if (!response.ok) throw new Response('Failed to get data', { status: 500 })
     return response.json()
   } catch (error) {
@@ -107,30 +107,30 @@ export const getRecipient = async (address, topic0) => {
  * Get Tour
  * @returns
  */
-export async function getTour() {
-  let requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-  }
+// export async function getTour() {
+//   let requestOptions = {
+//     method: 'GET',
+//     redirect: 'follow',
+//   }
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}tour`, requestOptions)
-  if (!response.ok) throw new Response('Failed to get data', { status: 500 })
-  return response.json()
-}
+//   const response = await fetch(`${import.meta.env.VITE_API_URL}tour`, requestOptions)
+//   if (!response.ok) throw new Response('Failed to get data', { status: 500 })
+//   return response.json()
+// }
 
-/**
- * Login
- * @param {json} post
- * @returns
- */
-export async function login(post) {
-  var requestOptions = {
-    method: 'POST',
-    body: JSON.stringify(post),
-    redirect: 'follow',
-  }
+// /**
+//  * Login
+//  * @param {json} post
+//  * @returns
+//  */
+// export async function login(post) {
+//   var requestOptions = {
+//     method: 'POST',
+//     body: JSON.stringify(post),
+//     redirect: 'follow',
+//   }
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}login`, requestOptions)
-  if (!response.ok) throw new Response('Failed to get data', { status: 500 })
-  return response.json()
-}
+//   const response = await fetch(`${import.meta.env.VITE_API_URL}login`, requestOptions)
+//   if (!response.ok) throw new Response('Failed to get data', { status: 500 })
+//   return response.json()
+// }

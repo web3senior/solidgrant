@@ -84,6 +84,7 @@ export function AuthProvider({ children }) {
   function resetPassword() {}
 
   useEffect(() => {
+    console.log(location.pathname )
     isWalletConnected().then((res) => {
       console.log(res)
       setIsConnected(res)
@@ -91,7 +92,8 @@ export function AuthProvider({ children }) {
       if (res) {
         console.log(res)
         setWallet(res)
-        navigate('/usr/dashboard')
+        if (location.pathname ==='/')  navigate('/usr/dashboard')
+
       } else {
         navigate('/home')
       }
