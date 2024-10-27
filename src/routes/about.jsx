@@ -24,11 +24,6 @@ const data = [
 
 const team = [
   {
-    avatar: TantodefiAvatar,
-    fullname: 'Tantodefi',
-    username: 'tantodefi',
-  },
-  {
     avatar: AmirAvatar,
     fullname: 'Amir Rahimi',
     username: 'web3senior',
