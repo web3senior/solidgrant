@@ -1,44 +1,56 @@
-# Solidgrant
+## Solidgrant
+--------
+![Author Badge](src/src/assets/badge/badge-author.svg "Aratta")
+<a href="//arbitrum.io">![Arbitrum Badge](src/src/assets/badge/badge-arb.svg "Arbitrum")</a>
+![Solidity Badge](src/src/assets/badge/badge-solidity.svg "Solidity")
+<a href="/test">![Test Badge](src/src/assets/badge/badge-test.svg "Test")</a>
+![HardHat Badge](src/src/assets/badge/badge-hardhat.svg "HardHat")
+![Prettier Badge](src/src/assets/badge/badge-prettier.svg "HardHat")
+<a href="//twitter.com/atenyun">![X Badge](src/src/assets/badge/badge-x.svg "HardHat")</a>
+
+### Demo
+➡️ <a href="https://solidgrant.click" target="blank">https://solidgrant.click</a>
+
+
+### Description
+
 SolidGrant is a decentralized autonomous organization (DAO) dapp built on top of the Allo Protocol, a robust decentralized governance platform operating on the Arbitrum network. This innovative platform empowers communities to collaboratively make decisions, manage treasury funds, and foster transparency and accountability within their organizations.
 
-## Demo
-https://solidgrant.click
+### Key Features
 
-## Screenshot
-<img src="shot.png"/>
+**Proposal and Voting:** Members can propose ideas and vote on them, ensuring a democratic and inclusive decision-making process.
 
-## Key Features
-Proposal and Voting: Members can propose ideas and vote on them, ensuring a democratic and inclusive decision-making process.
+**Treasury Management:** The DAO's treasury funds are securely managed, allowing for transparent allocation and utilization of resources.
 
-Treasury Management: The DAO's treasury funds are securely managed, allowing for transparent allocation and utilization of resources.
+**Community Activity Tracking:** The platform provides tools to track and analyze community engagement, fostering a vibrant and active community.
 
-Community Activity Tracking: The platform provides tools to track and analyze community engagement, fostering a vibrant and active community.
+**Security and Transparency:** Built on the secure and transparent foundation of the Arbitrum network and Allo Protocol, SolidGrant prioritizes the safety and integrity of the DAO's assets and operations.
 
-Security and Transparency: Built on the secure and transparent foundation of the Arbitrum network and Allo Protocol, SolidGrant prioritizes the safety and integrity of the DAO's assets and operations.
+### UI/UX
+<img src="src/shot.png" style="width:100%">
 
-## Benefits:
 
-Decentralization: Power is distributed among the community members, eliminating the need for centralized authorities.
+### API (endpoints)
+https://solidgrant.aratta.dev/v1/
 
-Transparency: All actions and decisions are recorded on the blockchain, ensuring transparency and accountability.
+### Installation
 
-Security: Leveraging the security of the Arbitrum network and smart contract technology, SolidGrant offers a secure platform for governance.
-
-Efficiency: Automated processes streamline governance operations, reducing administrative overhead.
-
-Community Empowerment: Members have direct control over the DAO's direction and can actively participate in its growth and development.
-
-Target Audience:
-
-Communities and Organizations: Any group seeking to establish a decentralized governance structure can benefit from SolidGrant.
-
-Developers: Developers can leverage the platform's APIs to build custom applications and integrations.
-
-Crypto Enthusiasts: Individuals passionate about decentralized technologies and community-driven initiatives can participate in the DAO's governance and decision-making processes.
-## Install
 ```
-git clone 
-cd solidgrant
-npm i
+git clone https://github.com/web3senior/solidgrant
+cd nightly
 npm run dev
 ```
+
+➜ Ready on localhost💥
+
+### Usage
+
+1️⃣ Connect your web3 wallet
+
+2️⃣ Switch to Arbitrum network
+
+3️⃣ Start by creating a new profile
+
+### Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
